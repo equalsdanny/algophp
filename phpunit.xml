@@ -1,0 +1,17 @@
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.3/phpunit.xsd">
+    <testsuites>
+        <testsuite name="sorting">
+            <directory suffix="SorterTest.php">tests</directory>
+        </testsuite>
+        <testsuite name="structures">
+            <file>tests/ArrayStackTest.php</file>
+            <file>tests/BinaryTreeTest.php</file>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
+</phpunit>
