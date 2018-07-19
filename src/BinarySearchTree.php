@@ -1,7 +1,9 @@
 <?php
 
-use exceptions\NodeDoesNotExistException;
-use exceptions\ValueNotFoundException;
+namespace App;
+
+use Exceptions\NodeDoesNotExistException;
+use Exceptions\ValueNotFoundException;
 
 class BinarySearchTree
 {
@@ -12,7 +14,7 @@ class BinarySearchTree
 
     private static function createNode($value, $left, $right, $parent)
     {
-        return (object) [
+        return (object)[
             'value' => $value,
             'left' => $left,
             'right' => $right,
@@ -25,13 +27,13 @@ class BinarySearchTree
     {
         $this->assertLinksAreConsistent();
 
-        if($this->root === null) {
+        if ($this->root === null) {
             $this->root = self::createNode($value, null, null, null);
             return;
         }
 
         $current = $this->root;
-        while(true) {
+        while (true) {
             if ($value <= $current->value) {
                 if ($current->left === null) {
                     $current->left = self::createNode($value, null, null, $current);
@@ -78,10 +80,10 @@ class BinarySearchTree
         $hasLeftChild = $node->left !== null;
         $hasRightChild = $node->right !== null;
 
-        if(!$hasLeftChild && !$hasRightChild) {
+        if (!$hasLeftChild && !$hasRightChild) {
             // The node has no children
 
-            if($isRoot) {
+            if ($isRoot) {
                 $this->root = null;
 
                 $this->assertLinksAreConsistent();
@@ -99,7 +101,7 @@ class BinarySearchTree
             // The node has exactly one child
             $child = $hasLeftChild ? $node->left : $node->right;
 
-            if($isRoot) {
+            if ($isRoot) {
                 $child->parent = null;
                 $this->root = $child;
 
@@ -127,11 +129,11 @@ class BinarySearchTree
         // Moving the target's left child as the successor's left child
         $this->transplant($node->left, $successor, 'left');
 
-        if($successor !== $node->right) {
+        if ($successor !== $node->right) {
             // If the successor is not the right child
             // Then we need to move the target's right child as the successor's right child
 
-            if($successor->right !== null) {
+            if ($successor->right !== null) {
                 // If the successor has the right child
                 // Then we need to move the successor's right child as the successor's parent child
                 $this->transplant($successor->right, $successor->parent, $successorLeftOrRight);
@@ -148,7 +150,7 @@ class BinarySearchTree
 
         // We are done with moving subtrees
         // Time to update the node itself
-        if($isRoot) {
+        if ($isRoot) {
             // Updating the link from new parent to successor
             $this->root = $successor;
             // Updating the link from successor to new parent
@@ -166,13 +168,13 @@ class BinarySearchTree
     private function transplant($target, $newParent, $leftOrRight)
     {
         // Removing the target from its old parent (unless the target was root)
-        if($target->parent !== null) {
+        if ($target->parent !== null) {
             $oldLeftOrRight = $target->parent->left === $target ? 'left' : 'right';
             $target->parent->{$oldLeftOrRight} = null;
         }
 
         // Letting the new parent know about its new child
-        if($newParent === null) {
+        if ($newParent === null) {
             $this->root = $target;
         } else {
             $newParent->{$leftOrRight} = $target;
@@ -188,12 +190,12 @@ class BinarySearchTree
      */
     private static function minimumNode($node)
     {
-        if($node === null) {
+        if ($node === null) {
             throw new LengthException();
         }
 
         $current = $node;
-        while($current->left !== null) {
+        while ($current->left !== null) {
             $current = $current->left;
         }
 
@@ -202,12 +204,12 @@ class BinarySearchTree
 
     private static function maximumNode($node)
     {
-        if($node === null) {
+        if ($node === null) {
             throw new LengthException();
         }
 
         $current = $node;
-        while($current->right !== null) {
+        while ($current->right !== null) {
             $current = $current->right;
         }
 
@@ -221,7 +223,7 @@ class BinarySearchTree
      */
     private static function successorNode($node)
     {
-        if($node->right === null) {
+        if ($node->right === null) {
             throw new NodeDoesNotExistException();
         }
 
@@ -236,10 +238,10 @@ class BinarySearchTree
     private function search($value)
     {
         $current = $this->root;
-        while($current !== null) {
-            if($current->value === $value) {
+        while ($current !== null) {
+            if ($current->value === $value) {
                 return $current;
-            } else if($value <= $current->value) {
+            } else if ($value <= $current->value) {
                 // If this is null, the loop will end
                 $current = $current->left;
             } else {
@@ -272,27 +274,27 @@ class BinarySearchTree
     {
         $visited = [];
 
-        self::traverse($this->root, function($node) {
+        self::traverse($this->root, function ($node) {
             // Checking that only root has no parent
-            if($node->parent === null && $this->root !== $node) {
+            if ($node->parent === null && $this->root !== $node) {
                 throw new Exception('Found node with no parent that is not root');
             }
 
             // Checking that this node is not its own parent
-            if($node->parent === $node) {
+            if ($node->parent === $node) {
                 throw new Exception('Found node that is its own parent');
             }
 
-            if($node->parent !== null) {
+            if ($node->parent !== null) {
                 // Checking that the parent knows about this node
-                if($node->parent->left !== $node && $node->parent->right !== $node) {
+                if ($node->parent->left !== $node && $node->parent->right !== $node) {
                     throw new Exception('Found a node whose parent does not know about its child');
                 }
 
                 // Checking that this node is in the correct subtree of its parent
-                if($node->parent->left === $node && $node->value > $node->parent->value) {
+                if ($node->parent->left === $node && $node->value > $node->parent->value) {
                     throw new Exception('Found node in the wrong subtree of its parent');
-                } elseif($node->parent->right === $node && $node->value <= $node->parent->value) {
+                } elseif ($node->parent->right === $node && $node->value <= $node->parent->value) {
                     throw new Exception('Found node in the wrong subtree of its parent');
                 }
             }
@@ -307,12 +309,12 @@ class BinarySearchTree
      */
     private static function traverse($node, $handler, &$visited)
     {
-        if($node === null) {
+        if ($node === null) {
             // Nothing to do
             return;
         }
 
-        if(in_array($node, $visited)) {
+        if (in_array($node, $visited)) {
             throw new Exception('Found cyclic tree');
         }
 
@@ -323,8 +325,9 @@ class BinarySearchTree
         self::traverse($node->right, $handler, $visited);
     }
 
-    private static function recursiveSortedArray($node) {
-        if($node === null) {
+    private static function recursiveSortedArray($node)
+    {
+        if ($node === null) {
             return [];
         }
 
@@ -332,6 +335,26 @@ class BinarySearchTree
         $self = [$node->value];
         $right = self::recursiveSortedArray($node->right);
         return array_merge($left, $self, $right);
+    }
+
+    public function state()
+    {
+        return [$this->recursiveState($this->root)];
+    }
+
+    private function recursiveState($node)
+    {
+        if ($node === null) {
+            return [];
+        }
+
+        return [
+            'name' => (string) $node->value,
+            'children' => array_values(array_filter([
+                $this->recursiveState($node->left),
+                $this->recursiveState($node->right)
+            ]))
+        ];
     }
 
     public function toSortedArray()
