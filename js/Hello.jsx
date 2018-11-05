@@ -17,18 +17,21 @@ class Hello extends React.Component {
 
     static renderTree(tree) {
         return (
-            <div id="treeWrapper" style={{width: '50em', height: '20em'}}>
-                <Tree orientation={'vertical'} data={tree}/>
+            <div id="treeWrapper" style={{border: '1px solid black', margin: '0.3em', width: '40em', height: '40em'}}>
+                {tree.length > 0 && <Tree orientation={'vertical'} data={tree} translate={{x: 350, y: 20}}
+                                          pathFunc='straight' zoom={0.8} zoomable={false} />}
+                {tree.length === 0 && <div>Empty tree</div>}
             </div>
         );
     }
 
     static renderSession(session) {
-        return session.map((tree, index) => (
-           <div key={index}>
-               {Hello.renderTree(tree)}
-           </div>
-        ));
+        const renderTree = (tree, index) => <div key={index}>{Hello.renderTree(tree)}</div>;
+        return (
+            <div style={{display: 'flex', flexFlow: 'row wrap'}}>
+                {session.map(renderTree)}
+            </div>
+        );
     }
 
     render() {

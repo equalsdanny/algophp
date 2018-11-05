@@ -2,10 +2,13 @@
 
 namespace App;
 
+use Exception;
 use Exceptions\NodeDoesNotExistException;
 use Exceptions\ValueNotFoundException;
+use Interfaces\BinaryTreeNode;
+use stdClass;
 
-class BinarySearchTree
+class BinarySearchTree implements Interfaces\BinarySearchTree
 {
     /**
      * @var stdClass|null
@@ -21,7 +24,6 @@ class BinarySearchTree
             'parent' => $parent
         ];
     }
-
 
     public function add($value)
     {
@@ -337,28 +339,16 @@ class BinarySearchTree
         return array_merge($left, $self, $right);
     }
 
-    public function state()
-    {
-        return [$this->recursiveState($this->root)];
-    }
-
-    private function recursiveState($node)
-    {
-        if ($node === null) {
-            return [];
-        }
-
-        return [
-            'name' => (string) $node->value,
-            'children' => array_values(array_filter([
-                $this->recursiveState($node->left),
-                $this->recursiveState($node->right)
-            ]))
-        ];
-    }
-
     public function toSortedArray()
     {
         return self::recursiveSortedArray($this->root);
+    }
+
+    /**
+     * @return BinaryTreeNode|null
+     */
+    public function root()
+    {
+        return $this->root;
     }
 }

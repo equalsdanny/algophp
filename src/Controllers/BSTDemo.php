@@ -12,7 +12,7 @@ class BSTDemo
         $session = [];
 
         $tree = new BinarySearchTree();
-        //$session[] = $tree->state();
+        $session[] = $tree->state();
 
         $tree->add(1);
         $session[] = $tree->state();
